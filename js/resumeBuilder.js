@@ -181,39 +181,46 @@ $(function(){
 
 		render: function() {
 			// Contacts
-			var entree = bio.contacts;
-			var formattedName = HTMLheaderName.replace("%data%", bio.name);
-			var formattedRole = HTMLheaderRole.replace("%data%", bio.role);
+			var bio = octopus.getBio();
+			var edu = octopus.getEducation();
+			var work = octopus.getWork();
+
+			var contactObj = bio.contacts;
+			var skillObj = bio.skills;
+
+
+
+			var formattedName = HTMLheaderName.replace("%data%", contactObj.name);
+			var formattedRole = HTMLheaderRole.replace("%data%", contactObj.role);
 			$("#header").prepend(formattedName + " " + formattedRole);
 
-			var formattedMobile = HTMLmobile.replace("%data%", entree.mobile);
+			var formattedMobile = HTMLmobile.replace("%data%", contactObj.mobile);
 			$("#topContacts, #footerContacts").append(formattedMobile);
-			var formattedEmail = HTMLemail.replace("%data%", entree.email);
+			var formattedEmail = HTMLemail.replace("%data%", contactObj.email);
 			$("#topContacts, #footerContacts").append(formattedEmail);
-			var formattedGithub = HTMLgithub.replace("%data%", entree.github);
+			var formattedGithub = HTMLgithub.replace("%data%", contactObj.github);
 			$("#topContacts, #footerContacts").append(formattedGithub);
-			var formattedTwitter = HTMLtwitter.replace("%data%", entree.twitter);
+			var formattedTwitter = HTMLtwitter.replace("%data%", contactObj.twitter);
 			$("#topContacts, #footerContacts").append(formattedTwitter);
-			var formattedLocation = HTMLlocation.replace("%data%", entree.location);
+			var formattedLocation = HTMLlocation.replace("%data%", contactObj.location);
 			$("#topContacts, #footerContacts").append(formattedLocation);
 
 
-			var formattedbioPic = HTMLbioPic.replace("%data%", bio.bioPic);
+			var formattedbioPic = HTMLbioPic.replace("%data%", contactObj.bioPic);
 			$("#header").append(formattedbioPic);
 
-			var formattedWelcomeMsg = HTMLwelcomeMsg.replace("%data%", bio.welcomeMessage);
+			var formattedWelcomeMsg = HTMLwelcomeMsg.replace("%data%", contactObj.welcomeMessage);
 			$("#header").append(formattedWelcomeMsg);
 
-			if (bio.skills.length > 0) {
-				var entree = bio.skills;
+			if (skillObj.length > 0) {
 				$("#header").append(HTMLskillsStart);
-				var formattedSkill = HTMLskills.replace("%data%", entree[0]);
+				var formattedSkill = HTMLskills.replace("%data%", skillObj[0]);
 				$("#skills").append(formattedSkill);
-				formattedSkill = HTMLskills.replace("%data%", entree[1]);
+				formattedSkill = HTMLskills.replace("%data%", skillObj[1]);
 				$("#skills").append(formattedSkill);
-				formattedSkill = HTMLskills.replace("%data%", entree[2]);
+				formattedSkill = HTMLskills.replace("%data%", skillObj[2]);
 				$("#skills").append(formattedSkill);
-				formattedSkill = HTMLskills.replace("%data%", entree[3]);
+				formattedSkill = HTMLskills.replace("%data%", skillObj[3]);
 				$("#skills").append(formattedSkill);
 			}
 
@@ -293,11 +300,13 @@ $(function(){
 			// Map
 			$("#mapDiv").append(googleMap);
 			$("#mapDiv").before(HTMLmapButton);
-		};
+		}
+	};
 
 	var octopus = {
 		init : function() {
-
+			view.render();
+			view.bindEvents();
 
 		},
 
@@ -315,7 +324,7 @@ $(function(){
 
 		getProjects: function() {
 			return work.projects;
-		}
+		},
 
 		inName : function(name) {
 			name = name.trim().split(" ");
