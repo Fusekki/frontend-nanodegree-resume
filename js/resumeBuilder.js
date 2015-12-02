@@ -1,6 +1,81 @@
 $(function(){
 
 	var model = {
+		html: {
+			HTMLheaderName : '<h1 id="name">%data%</h1>',
+			HTMLheaderRole : '<small class="orange-text">%data%</small></h2><hr/>',
+
+			HTMLcontactGeneric : '<li class="flex-item"><span class="orange-text">%contact%</span><span class="white-text">%data%</span></li>',
+			HTMLmobile : '<li class="flex-item"><span class="orange-text">mobile</span><span class="white-text">%data%</span></li>',
+			HTMLemail : '<li class="flex-item"><span class="orange-text">email</span><span class="white-text">%data%</span></li>',
+			HTMLtwitter : '<li class="flex-item"><span class="orange-text">twitter</span><span class="white-text">%data%</span></li>',
+			HTMLgithub : '<li class="flex-item"><span class="orange-text">github</span><span class="white-text">%data%</span></li>',
+			HTMLblog : '<li class="flex-item"><span class="orange-text">blog</span><span class="white-text">%data%</span></li>',
+			HTMLlocation : '<li class="flex-item"><span class="orange-text">location</span><span class="white-text">%data%</span></li>',
+
+			HTMLbioPic : '<img src="%data%" class="biopic">',
+			HTMLwelcomeMsg : '<span class="welcome-message">%data%</span>',
+
+			HTMLskillsStart : '<h3 id="skills-h3">Skills at a Glance:</h3><ul id="skills" class="flex-box"></ul>',
+			HTMLskills : '<li class="flex-item"><span class="white-text">%data%</span></li>',
+
+			HTMLworkStart : '<div class="work-entry"></div>',
+			HTMLworkEmployer : '<a target="_blank" <a href="#">%data%',
+			HTMLworkTitle : ' - %data%</a>',
+			HTMLworkDates : '<div class="date-text">%data%</div>',
+			HTMLworkLocation : '<div class="location-text">%data%</div>',
+			HTMLworkDescription : '<p><br>%data%</p>',
+
+			HTMLprojectStart : '<div class="project-entry"></div>',
+			HTMLprojectTitle : '<a target="_blank"<a href="#">%data%</a>',
+			HTMLprojectDates : '<div class="date-text">%data%</div>',
+			HTMLprojectDescription : '<p><br>%data%</p>',
+			HTMLprojectImage : '<img src="%data%">',
+
+			HTMLschoolStart : '<div class="education-entry"></div>',
+			HTMLschoolName : '<a target="_blank"<a href="#">%data%',
+			HTMLschoolDegree : ' -- %data%</a>',
+			HTMLschoolDates : '<div class="date-text">%data%</div>',
+			HTMLschoolLocation : '<div class="location-text">%data%</div>',
+			HTMLschoolMajor : '<em><br>Major: %data%</em>',
+
+			HTMLonlineStart : '<div class="online-entry"></div>',
+			HTMLonlineClasses : '<h3>Online Classes</h3>',
+			HTMLonlineTitle : '<a target="_blank" <a href="#">%data%',
+			HTMLonlineSchool : ' - %data%</a>',
+			HTMLonlineDates : '<div class="date-text">%data%</div>',
+			HTMLonlineURL : '<br><a target="_blank" href="#">%data%</a>',
+
+			internationalizeButton : '<button>Internationalize</button>',
+			googleMap : '<div id="map"></div>',
+
+			HTMLworkButton : "<div class='row'>\
+			<button class='btn' role='button' id='workExperienceButton'>Hide Work Experience</button>\
+			</div>",
+
+			HTMLprojectButton : "<div class='row'>\
+			<button class='btn' role='button' id='projectsButton'>Hide Projects</button>\
+			</div>",
+
+			HTMLeducationButton : "<div class='row'>\
+			<button class='btn' role='button' id='educationButton'>Hide Education</button>\
+			</div>",
+
+			HTMLmapButton : "<div class='row'>\
+			<button class='btn' role='button' id='mapDivButton'>Hide Map</button>\
+			</div>",
+
+			 // $(document).ready(function() {
+			 //   $('button').click(function() {
+			 //     var iName = inName(bio.name) || function(){};
+			 //     $('#name').html(iName);
+			 //   });
+			 // })
+
+			clickLocations : []
+
+		},
+
 		bio : {
 			"name" : "Phillip Stafford",
 			"role" : "Front-End Web Developer",
@@ -131,10 +206,12 @@ $(function(){
 				}
 
 				]
-			}
+			},
+		map : null
 	};
 
 	var view = {
+
 		bindEvents: function() {
 			  $("#workExperienceButton").click( function(){
 			    $("#workExperience").slideToggle();
@@ -184,129 +261,134 @@ $(function(){
 			var bio = octopus.getBio();
 			var edu = octopus.getEducation();
 			var work = octopus.getWork();
+			var projects = octopus.getProjects();
+			var objHTML = octopus.getHTML();
+
 
 			var contactObj = bio.contacts;
 			var skillObj = bio.skills;
 
 
 
-			var formattedName = HTMLheaderName.replace("%data%", contactObj.name);
-			var formattedRole = HTMLheaderRole.replace("%data%", contactObj.role);
+			var formattedName = objHTML.HTMLheaderName.replace("%data%", contactObj.name);
+			var formattedRole = objHTML.HTMLheaderRole.replace("%data%", contactObj.role);
 			$("#header").prepend(formattedName + " " + formattedRole);
 
-			var formattedMobile = HTMLmobile.replace("%data%", contactObj.mobile);
+			var formattedMobile = objHTML.HTMLmobile.replace("%data%", contactObj.mobile);
 			$("#topContacts, #footerContacts").append(formattedMobile);
-			var formattedEmail = HTMLemail.replace("%data%", contactObj.email);
+			var formattedEmail = objHTML.HTMLemail.replace("%data%", contactObj.email);
 			$("#topContacts, #footerContacts").append(formattedEmail);
-			var formattedGithub = HTMLgithub.replace("%data%", contactObj.github);
+			var formattedGithub = objHTML.HTMLgithub.replace("%data%", contactObj.github);
 			$("#topContacts, #footerContacts").append(formattedGithub);
-			var formattedTwitter = HTMLtwitter.replace("%data%", contactObj.twitter);
+			var formattedTwitter = objHTML.HTMLtwitter.replace("%data%", contactObj.twitter);
 			$("#topContacts, #footerContacts").append(formattedTwitter);
-			var formattedLocation = HTMLlocation.replace("%data%", contactObj.location);
+			var formattedLocation = objHTML.HTMLlocation.replace("%data%", contactObj.location);
 			$("#topContacts, #footerContacts").append(formattedLocation);
 
-
-			var formattedbioPic = HTMLbioPic.replace("%data%", contactObj.bioPic);
+			var formattedbioPic = objHTML.HTMLbioPic.replace("%data%", bio.bioPic);
 			$("#header").append(formattedbioPic);
 
-			var formattedWelcomeMsg = HTMLwelcomeMsg.replace("%data%", contactObj.welcomeMessage);
+			var formattedWelcomeMsg = objHTML.HTMLwelcomeMsg.replace("%data%", contactObj.welcomeMessage);
 			$("#header").append(formattedWelcomeMsg);
 
 			if (skillObj.length > 0) {
-				$("#header").append(HTMLskillsStart);
-				var formattedSkill = HTMLskills.replace("%data%", skillObj[0]);
+				$("#header").append(objHTML.HTMLskillsStart);
+				var formattedSkill = objHTML.HTMLskills.replace("%data%", skillObj[0]);
 				$("#skills").append(formattedSkill);
-				formattedSkill = HTMLskills.replace("%data%", skillObj[1]);
+				formattedSkill = objHTML.HTMLskills.replace("%data%", skillObj[1]);
 				$("#skills").append(formattedSkill);
-				formattedSkill = HTMLskills.replace("%data%", skillObj[2]);
+				formattedSkill = objHTML.HTMLskills.replace("%data%", skillObj[2]);
 				$("#skills").append(formattedSkill);
-				formattedSkill = HTMLskills.replace("%data%", skillObj[3]);
+				formattedSkill = objHTML.HTMLskills.replace("%data%", skillObj[3]);
 				$("#skills").append(formattedSkill);
 			}
 
-					// education
-			$("#education").before(HTMLeducationButton);
-			$("#education").append(HTMLschoolStart);
+			// education
+			$("#education").before(objHTML.HTMLeducationButton);
+			$("#education").append(objHTML.HTMLschoolStart);
 
-			for (school in education.schools)  {
-				var entree = education.schools[school];
+			for (school in edu.schools)  {
+				var entree = edu.schools[school];
 
-				var formattedschoolName = HTMLschoolName.replace("%data%", entree.name).replace("#", entree.url);
-				var formattedschoolDegree = HTMLschoolDegree.replace("%data%", entree.degree);
+				var formattedschoolName = objHTML.HTMLschoolName.replace("%data%", entree.name).replace("#", entree.url);
+				var formattedschoolDegree = objHTML.HTMLschoolDegree.replace("%data%", entree.degree);
 				$(".education-entry:last").append(formattedschoolName + formattedschoolDegree);
-				var formattedschoolDates = HTMLschoolDates.replace("%data%", entree.dates);
+				var formattedschoolDates = objHTML.HTMLschoolDates.replace("%data%", entree.dates);
 				$(".education-entry:last").append(formattedschoolDates);
-				var formattedschoolLocation = HTMLschoolLocation.replace("%data%", entree.location);
+				var formattedschoolLocation = objHTML.HTMLschoolLocation.replace("%data%", entree.location);
 				$(".education-entry:last").append(formattedschoolLocation);
-				var formattedschoolMajor = HTMLschoolMajor.replace("%data%", entree.majors);
+				var formattedschoolMajor = objHTML.HTMLschoolMajor.replace("%data%", entree.majors);
 				$(".education-entry:last").append(formattedschoolMajor);
 			}
 
-			$("#education").append(HTMLonlineClasses);
-			$("#education").append(HTMLonlineStart);
-			 for (course in education.onlineCourses)  {
-			 	var entree = education.onlineCourses[course];
+			$("#education").append(objHTML.HTMLonlineClasses);
+			$("#education").append(objHTML.HTMLonlineStart);
+			 for (course in edu.onlineCourses)  {
+			 	var entree = edu.onlineCourses[course];
 
-				var formattedonlineTitle = HTMLonlineTitle.replace("%data%", entree.title).replace("#", entree.url);
-				var formattedonlineSchool = HTMLonlineSchool.replace("%data%", entree.school);
+				var formattedonlineTitle = objHTML.HTMLonlineTitle.replace("%data%", entree.title).replace("#", entree.url);
+				var formattedonlineSchool = objHTML.HTMLonlineSchool.replace("%data%", entree.school);
 				$(".online-entry").append(formattedonlineTitle + formattedonlineSchool).css("padding-left", "5%");
-				var formattedonlineDates = HTMLonlineDates.replace("%data%", entree.date);
+				var formattedonlineDates = objHTML.HTMLonlineDates.replace("%data%", entree.date);
 				$(".online-entry").append(formattedonlineDates);
-				var formattedonlineURL = HTMLonlineURL.replace("%data%", entree.url).replace("#", entree.url);
+				var formattedonlineURL = objHTML.HTMLonlineURL.replace("%data%", entree.url).replace("#", entree.url);
 				$(".online-entry").append(formattedonlineURL);
 				$(".online-entry").append($("<hr/>"));
 
 			}
 
 			// Work
-			$("#workExperience").before(HTMLworkButton);
+			$("#workExperience").before(objHTML.HTMLworkButton);
 			for (job in work.jobs)  {
 				var entree = work.jobs[job];
 
-				$("#workExperience").append(HTMLworkStart);
-				var formattedworkEmployer = HTMLworkEmployer.replace("%data%", entree.employer).replace("#", entree.url);
-				var formattedworkTitle = HTMLworkTitle.replace("%data%", entree.title);
+				$("#workExperience").append(objHTML.HTMLworkStart);
+				var formattedworkEmployer = objHTML.HTMLworkEmployer.replace("%data%", entree.employer).replace("#", entree.url);
+				var formattedworkTitle = objHTML.HTMLworkTitle.replace("%data%", entree.title);
 				$(".work-entry:last").append(formattedworkEmployer + formattedworkTitle);
-				var formattedworkDates = HTMLworkDates.replace("%data%", entree.dates);
+				var formattedworkDates = objHTML.HTMLworkDates.replace("%data%", entree.dates);
 				$(".work-entry:last").append(formattedworkDates);
-				var formattedworkLocation = HTMLworkLocation.replace("%data%", entree.location);
+				var formattedworkLocation = objHTML.HTMLworkLocation.replace("%data%", entree.location);
 				$(".work-entry:last").append(formattedworkLocation);
-				var formattedworkDescription = HTMLworkDescription.replace("%data%", entree.description);
+				var formattedworkDescription = objHTML.HTMLworkDescription.replace("%data%", entree.description);
 				$(".work-entry:last").append(formattedworkDescription);
 			}
 
 			// Projects
-			$("#projects").before(HTMLprojectButton);
+			$("#projects").before(objHTML.HTMLprojectButton);
 			for (project in projects.projects) {
 				var entree = projects.projects[project];
-				$("#projects").append(HTMLprojectStart);
+				$("#projects").append(objHTML.HTMLprojectStart);
 
 
-				var formattedprojectTitle = HTMLprojectTitle.replace("%data%", entree.title).replace('#', entree.url);
+				var formattedprojectTitle = objHTML.HTMLprojectTitle.replace("%data%", entree.title).replace('#', entree.url);
 				$(".project-entry:last").append(formattedprojectTitle);
-				var formattedprojectDate = HTMLprojectDates.replace("%data%", entree.dates);
+				var formattedprojectDate = objHTML.HTMLprojectDates.replace("%data%", entree.dates);
 				$(".project-entry:last").append(formattedprojectDate);
-				var formattedprojectDescription = HTMLprojectDescription.replace("%data%", entree.description);
+				var formattedprojectDescription = objHTML.HTMLprojectDescription.replace("%data%", entree.description);
 				$(".project-entry:last").append(formattedprojectDescription);
 
 				if (projects.projects[project].images.length > 0) {
 					for (image in projects.projects[project].images) {
-						var formattedprojectImage = HTMLprojectImage.replace("%data%", projects.projects[project].images[image]);
+						var formattedprojectImage = objHTML.HTMLprojectImage.replace("%data%", projects.projects[project].images[image]);
 						$(".project-entry:last").append(formattedprojectImage);
 					}
 				}
 			}
 
 			// Map
-			$("#mapDiv").append(googleMap);
-			$("#mapDiv").before(HTMLmapButton);
+			$("#mapDiv").append(objHTML.googleMap);
+			$("#mapDiv").before(objHTML.HTMLmapButton);
 		}
 	};
 
 	var octopus = {
 		init : function() {
+
+
 			view.render();
 			view.bindEvents();
+			this.createMap();
 
 		},
 
@@ -314,16 +396,24 @@ $(function(){
 			return model.bio;
 		},
 
-		getEducation: function() {
+		getEducation : function() {
 			return model.education;
 		},
 
-		getWork: function() {
+		getWork : function() {
 			return model.work;
 		},
 
-		getProjects: function() {
-			return work.projects;
+		getProjects : function() {
+			return model.projects;
+		},
+
+		getHTML : function() {
+			return model.html;
+		},
+
+		getMap : function() {
+			return model.map;
 		},
 
 		inName : function(name) {
@@ -332,7 +422,166 @@ $(function(){
 			name[0] = name[0].slice(0,1).toUpperCase() + name[0].slice(1).toLowerCase();;
 
 		 	return name[0] + " " + name[1];
-		}
+		},
+
+		logClicks : function(x,y) {
+			clickLocations.push(
+				{
+			      x: x,
+			      y: y
+			    }
+			  );
+			  console.log('x location: ' + x + '; y location: ' + y);
+		},
+
+		locationFinder : function() {
+
+		    // initializes an empty array
+		    var locations = [];
+		    var contacts = this.getBio().contacts;
+
+		    // adds the single location property from bio to the locations array
+		    locations.push(contacts.location);
+
+		    // iterates through school locations and appends each location to
+		    // the locations array
+		    for (var school in education.schools) {
+		      locations.push(education.schools[school].location);
+		    }
+
+		    // iterates through work locations and appends each location to
+		    // the locations array
+		    var work = this.getWork();
+		    for (var job in work.jobs) {
+		      locations.push(work.jobs[job].location);
+		    }
+
+		    return locations;
+		  },
+
+		  /*
+		  createMapMarker(placeData) reads Google Places search results to create map pins.
+		  placeData is the object returned from search results containing information
+		  about a single location.
+		  */
+		  createMapMarker : function(placeData) {
+
+		    // The next lines save location data from the search result object to local variables
+		    var lat = placeData.geometry.location.lat();  // latitude from the place service
+		    var lon = placeData.geometry.location.lng();  // longitude from the place service
+		    var name = placeData.formatted_address;   // name of the place from the place service
+		    var bounds = window.mapBounds;            // current boundaries of the map window
+
+		    // marker is an object with additional data about the pin for a single location
+		    var marker = new google.maps.Marker({
+		      map: map,
+		      position: placeData.geometry.location,
+		      title: name
+		    });
+
+		    // infoWindows are the little helper windows that open when you click
+		    // or hover over a pin on a map. They usually contain more information
+		    // about a location.
+		    var infoWindow = new google.maps.InfoWindow({
+		      content: name
+		    });
+
+		    // hmmmm, I wonder what this is about...
+		    google.maps.event.addListener(marker, 'click', function() {
+		      // your code goes here!
+		    infoWindow.open(map,marker);
+		    });
+
+		    // this is where the pin actually gets added to the map.
+		    // bounds.extend() takes in a map location object
+		    bounds.extend(new google.maps.LatLng(lat, lon));
+		    // fit the map to the new marker
+		    map.fitBounds(bounds);
+		    // center the map
+		    map.setCenter(bounds.getCenter());
+		  },
+
+		  /*
+		  callback(results, status) makes sure the search returned results for a location.
+		  If so, it creates a new map marker for that location.
+		  */
+		  callback : function(results, status) {
+		    if (status == google.maps.places.PlacesServiceStatus.OK) {
+		      createMapMarker(results[0]);
+		    }
+		  },
+
+		  		  /*
+		  pinPoster(locations) takes in the array of locations created by locationFinder()
+		  and fires off Google place searches for each location
+		  */
+		  pinPoster : function(locations) {
+
+		    // creates a Google place search service object. PlacesService does the work of
+		    // actually searching for location data.
+
+		    var map = octopus.getMap();
+		    console.log(map);
+		    var service = new google.maps.places.PlacesService(map);
+
+		    // Iterates through the array of locations, creates a search object for each location
+		    for (var place in locations) {
+
+		      // the search request object
+		      var request = {
+		        query: locations[place]
+		      };
+
+		      // Actually searches the Google Maps API for location data and runs the callback
+		      // function with the search results after each search.
+		      service.textSearch(request, this.callback);
+		    }
+		  },
+
+		  createMap : function() {
+		  	$(document).click(function(loc) {
+		  		var x = loc.pageX;
+			    var y = loc.pageY;
+
+			    octopus.logClicks(x,y);
+			});
+
+			// Sets the boundaries of the map based on pin locations
+		    window.mapBounds = new google.maps.LatLngBounds();
+
+		    // locations is an array of location strings returned from locationFinder()
+		    locations = octopus.locationFinder();
+
+		    // pinPoster(locations) creates pins on the map for each location in
+		    // the locations array
+		    //console.log(locations);
+		    octopus.pinPoster(locations);
+
+
+
+		    // Calls the initializeMap() function when the page loads
+			window.addEventListener('load', this.initializeMap);
+
+			// Vanilla JS way to listen for resizing of the window
+			// and adjust map bounds
+			window.addEventListener('resize', function(e) {
+			  	//Make sure the map bounds get updated on page resize
+			  	map.fitBounds(mapBounds);
+		  	});
+		  },
+
+	  	  initializeMap : function() {
+			// declares a global map variable
+	  	  	map = octopus.getMap();
+
+			var locations;
+
+		    var mapOptions = {
+		      disableDefaultUI: true
+		    };
+
+		    map = new google.maps.Map(document.querySelector('#map'), mapOptions);
+		},
 
 	};
 
